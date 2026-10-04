@@ -4,7 +4,9 @@
 	"private": true,
 	"scripts": {
 		"dev": "wrangler dev --config wrangler-dev.toml",
-		"test": "wrangler deploy --config wrangler-test.toml",
+		"test": "node --experimental-sqlite --test test/security/*.test.mjs && vitest run --config vitest.security.config.js",
+		"security:check": "python3 scripts/security_gate.py",
+		"db:migrate": "node scripts/migrate.mjs",
 		"deploy": "wrangler deploy",
 		"start": "wrangler dev"
 	},

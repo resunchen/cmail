@@ -10,6 +10,10 @@ export default {
 	 async fetch(req, env, ctx) {
 
 		const url = new URL(req.url)
+		// Retired bootstrap paths must never reach auth, assets, or database code.
+		if (url.pathname === '/api/init' || url.pathname.startsWith('/api/init/')) {
+			return new Response('Not Found', { status: 404 });
+		}
 
 		if (url.pathname.startsWith('/api/')) {
 			url.pathname = url.pathname.replace('/api', '')

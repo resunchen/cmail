@@ -1,0 +1,24 @@
+name: Security gates
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: mail-worker/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: mail-worker
+      - run: pnpm security:check && pnpm test
+        working-directory: mail-worker

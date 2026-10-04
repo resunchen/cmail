@@ -25,3 +25,8 @@ mail-vue/node_modules
 mail-vue/dist
 .wrangler
 .venv
+
+.dev.vars*
+mail-worker/.env*
+mail-worker/wrangler-deploy.json
+__pycache__/

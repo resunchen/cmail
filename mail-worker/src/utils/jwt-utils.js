@@ -1,6 +1,8 @@
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
+const validSecret = secret => typeof secret === 'string' && encoder.encode(secret.trim()).length >= 32;
+
 const base64url = (input) => {
 	const str = btoa(String.fromCharCode(...new Uint8Array(input)));
 	return str.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
@@ -14,6 +16,7 @@ const base64urlDecode = (str) => {
 
 const jwtUtils = {
 	async generateToken(c, payload, expiresInSeconds) {
+		if (!validSecret(c.env.jwt_secret)) throw new Error('JWT signing secret is not configured');
 		const header = {
 			alg: 'HS256',
 			typ: 'JWT'
@@ -47,6 +50,7 @@ const jwtUtils = {
 	},
 
 	async verifyToken(c, token) {
+		if (!validSecret(c.env.jwt_secret)) return null;
 		try {
 			const [headerB64, payloadB64, signatureB64] = token.split('.');
 
